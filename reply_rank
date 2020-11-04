@@ -1,0 +1,27 @@
+library(readxl)
+library(writexl)
+library(dplyr)
+
+reply_raw <- read_xlsx("reply_single_contents_raw.xlsx")
+reply_raw
+
+reply_rank <- reply_raw %>% 
+  mutate(count_comment = nchar(reply_raw$comment)) %>% 
+  arrange(desc(count_comment)) %>% 
+  group_by(subject)
+
+head(reply_rank, 10)
+
+
+reply_raw2 <- read_xlsx("reply_multi_contents_raw.xlsx")
+reply_raw2
+
+reply_rank2 <- reply_raw %>% 
+  mutate(count_comment = nchar(reply_raw2$comment)) %>% 
+  arrange(desc(count_comment)) %>% 
+  group_by(subject) %>% 
+  slice(1:3)
+
+View(reply_rank2)
+
+write_xlsx(reply_rank, "reply_top3.xlsx")
